@@ -50,9 +50,9 @@ app.post("/api/shorturl", function(req,res){
     let originalUrl = urlDatabase[shortUrl]; // as an index in urlDatabase to find the associated originalUrl.
 
     if(originalUrl){
-      res.redirect("originalUrl") //if the originalUrl is in urlDatabase the user is redirected to it.
+      return res.redirect("originalUrl") //if the originalUrl is in urlDatabase the user is redirected to it.
     }else{
-      res.json( {"No original URL found"} )
+      return res.json( {"No original URL found"} )
     }
 
 
