@@ -27,11 +27,13 @@ app.get('/api/hello', function(req, res) {
 // URl Shortener
 let urlDatabase = {}
 
-app.post("/api/shorturl", function(req,res){
-  let { url } = req.body;
+app.post("/api/shorturl", (req,res) => {
 
+  let { url } = req.body;
   
-  let domain = url.replace(/^https?:\/\//,"").split("/")[0] // Replace the protocol part of the url with "". Split it at / and store it in an array. assign [0] to domain.
+  let domain = url.replace(/^https?:\/\//,"").split("/")[0] // Replace the protocol part of the url with "". 
+                                                            // Split it at / and store it in an array. assign [0] to domain.
+
 
   dns.lookup(domain, (err, address) => {
     if(err || !address){
@@ -40,15 +42,15 @@ app.post("/api/shorturl", function(req,res){
 
     let shortUrl = Object.keys.length(urlDatabase) + 1 // return  an array with the amount of keys in the urlDatabase object and + 1  
     urlDatabase[shortUrl] = url // at this point the parsed url is valid and is assigned to a new index in the url Database Object.
-
+    console.log("url: "+url `, shortUrl: `+ shortUrl)
     res.json({ original_url : url, short_url : shortUrl} )
 
   })
 
-  app.get("/api/shorturl/:short_url", function(req,res){  
+  app.get("/api/shorturl/:short_url", (req,res) => {
     let shortUrl = req.params.short_url   //when a GET request is made the value of Short_url is used
     let originalUrl = urlDatabase[shortUrl]; // as an index in urlDatabase to find the associated originalUrl.
-
+    console.log(`originalUrl: `+ originalUrl)
     if(originalUrl){
       return res.redirect(originalUrl) //if the originalUrl is in urlDatabase the user is redirected to it.
     }else{
