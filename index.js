@@ -41,7 +41,7 @@ app.post("/api/shorturl", function(req,res){
     let shortUrl = Object.keys.length(urlDatabase) + 1 // return  an array with the amount of keys in the urlDatabase object and + 1  
     urlDatabase[shortUrl] = url // at this point the parsed url is valid and is assigned to a new index in the url Database Object.
 
-    res.json({ original_url : url, short_url : shortUrl})
+    res.json({ original_url : url, short_url : shortUrl} )
 
   })
 
@@ -50,9 +50,9 @@ app.post("/api/shorturl", function(req,res){
     let originalUrl = urlDatabase[shortUrl]; // as an index in urlDatabase to find the associated originalUrl.
 
     if(originalUrl){
-      return res.redirect("originalUrl") //if the originalUrl is in urlDatabase the user is redirected to it.
+      return res.redirect(originalUrl) //if the originalUrl is in urlDatabase the user is redirected to it.
     }else{
-      return res.json( {"No original URL found"} )
+      return res.json( {"No short URL found"} )
     }
 
 
