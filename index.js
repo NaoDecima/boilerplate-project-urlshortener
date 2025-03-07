@@ -52,7 +52,7 @@ app.post("/api/shorturl", function(req,res){
     if(originalUrl){
       return res.redirect(originalUrl) //if the originalUrl is in urlDatabase the user is redirected to it.
     }else{
-      return res.json( {"No short URL found"} )
+      return res.json( {error: "No short URL found"} )
     }
 
 
