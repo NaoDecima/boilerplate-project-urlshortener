@@ -48,21 +48,21 @@ app.post("/api/shorturl", (req,res) => {
 
   })
 
-  app.get("/api/shorturl/:short_url", (req,res) => {
-    let shortUrl = req.params.short_url   //when a GET request is made the value of Short_url is used
-    let originalUrl = urlDatabase[shortUrl]; // as an index in urlDatabase to find the associated originalUrl.
-    console.log(`originalUrl: `+ originalUrl)
-    if(originalUrl){
-      return res.redirect(originalUrl) //if the originalUrl is in urlDatabase the user is redirected to it.
-    }else{
-      return res.json( {error: "No short URL found"} )
-    }
-
-
-  })
-
+  
 })
 
+app.get("/api/shorturl/:short_url", (req,res) => {
+  let shortUrl = req.params.short_url   //when a GET request is made the value of Short_url is used
+  let originalUrl = urlDatabase[shortUrl]; // as an index in urlDatabase to find the associated originalUrl.
+  console.log(`originalUrl: `+ originalUrl)
+  if(originalUrl){
+    return res.redirect(originalUrl) //if the originalUrl is in urlDatabase the user is redirected to it.
+  }else{
+    return res.json( {error: "No short URL found"} )
+  }
+
+
+})
 
 
 app.listen(port, function() {
