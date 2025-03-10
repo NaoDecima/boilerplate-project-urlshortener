@@ -43,8 +43,7 @@ app.post("/api/shorturl", (req,res) => {
 
     for(let key in urlDatabase){
       if(urlDatabase[key] === url){
-
-        return res.json({ original_url : url, short_url : shortUrl} )
+        res.json({ original_url : url, short_url : key} )
       }
     }
     let shortUrl = Object.keys(urlDatabase).length + 1 // return  an array with the amount of keys in the urlDatabase object and + 1  
