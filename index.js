@@ -87,7 +87,7 @@ app.post("/api/shorturl", (req,res) => {
   if(!isValidUrl(url)){
     return res.json( { "error": 'Invalid URL' } )
   }else {
-    const existingUrl = await findUrlInDatabase(url); // Use await here
+    const existingUrl = findUrlInDatabase(url); // Use await here
     if (existingUrl) {
       return res.json({ original_url: existingUrl.original_url, short_url: existingUrl._id }); // Return existing URL data
     } else {
