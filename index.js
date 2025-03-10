@@ -29,7 +29,7 @@ let urlDatabase = {}
 
 app.post("/api/shorturl", (req,res) => {
 
-  let { url } = req.body;
+  let  url  = new URL(req.body.url);
   
   let domain = url.replace(/^https?:\/\//,"").split("/")[0] // Replace the protocol part of the url with "". 
                                                            // Split it at / and store it in an array. assign [0] to domain.
