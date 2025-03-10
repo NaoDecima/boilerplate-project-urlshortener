@@ -42,28 +42,17 @@ app.post("/api/shorturl", (req,res) => {
   if(!isValidUrl(url)){
     return res.json( {"error":'Invalid URL'} )
   }else{
-
     for(let key in urlDatabase){
       if(urlDatabase[key] === url){
-        res.json({ original_url : url, short_url : key} )
+        return res.json({ original_url : url, short_url : key} )
       }
     }
-    let shortUrl = Object.keys(urlDatabase).length + 1 // return  an array with the amount of keys in the urlDatabase object and + 1  
-    urlDatabase[shortUrl] = url // at this point the parsed url is valid and is assigned to a new index in the url Database Object.
-    console.log(`url: ${url}, shortUrl: ${shortUrl}`)
-    res.json({ original_url : url, short_url : shortUrl} )
-
   }
 
-  //let domain = new URL(url).hostname; //extracts domain
-
-  /*dns.lookup(domain, (err, address) => {
-    if(err || !address){
-      return res.json( {"error":'invalid URL'} )
-    }
-  })*/
-
-  
+  let shortUrl = Object.keys(urlDatabase).length + 1 // return  an array with the amount of keys in the urlDatabase object and + 1  
+  urlDatabase[shortUrl] = url // at this point the parsed url is valid and is assigned to a new index in the url Database Object.
+  console.log(`url: ${url}, shortUrl: ${shortUrl}`)
+  res.json({ original_url : url, short_url : shortUrl} )
 })
 
 app.get("/api/shorturl/:short_url", (req,res) => {
