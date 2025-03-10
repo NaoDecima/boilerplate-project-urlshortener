@@ -41,9 +41,9 @@ app.post("/api/shorturl", (req,res) => {
       return res.json( { error: 'invalid url' } )
     }
 
-    for(let urlDb in urlDatabase){
-      if(url === urlDb){
-        console.log(`url: ${url}, shortUrl: ${shortUrl}`)
+    for(let key in urlDatabase){
+      if(urlDatabase[key] === url){
+
         return res.json({ original_url : url, short_url : shortUrl} )
       }
     }
