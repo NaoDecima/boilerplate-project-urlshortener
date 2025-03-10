@@ -15,11 +15,11 @@ app.use('/public', express.static(`${process.cwd()}/public`));
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(express.urlencoded( { extended: true })) //MiddleWare for form data
 
-mongoose.connect('mongodb+srv://decimanao:lDhFfSRDnTl2SQYz@cluster0.l133z.mongodb.net/fcc-UrlShortenerProject.URLDatabase?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
 // connect to MongoDatabase
+mongoose.connect('mongodb+srv://decimanao:lDhFfSRDnTl2SQYz@cluster0.l133z.mongodb.net/fcc-UrlShortenerProject.URLDatabase?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
 
 let UrlSchema = new mongoose.schema({    //create a new schema and model for Url's in order to be saved in MongoDb 
-  url: {type: string, required: true}
+  url: {type: String, required: true}
 })
 let URLDatabase = mongoose.model("URLDatabase", UrlSchema)
 
