@@ -43,15 +43,14 @@ app.post("/api/shorturl", (req,res) => {
 
     for(let urlDb in urlDatabase){
       if(url === urlDb){
-        res.json({ original_url : url, short_url : shortUrl} )
-      }else{
-        let shortUrl = Object.keys(urlDatabase).length + 1 // return  an array with the amount of keys in the urlDatabase object and + 1  
-        urlDatabase[shortUrl] = url // at this point the parsed url is valid and is assigned to a new index in the url Database Object.
         console.log(`url: ${url}, shortUrl: ${shortUrl}`)
-        res.json({ original_url : url, short_url : shortUrl} )
+        return res.json({ original_url : url, short_url : shortUrl} )
       }
     }
-    
+    let shortUrl = Object.keys(urlDatabase).length + 1 // return  an array with the amount of keys in the urlDatabase object and + 1  
+    urlDatabase[shortUrl] = url // at this point the parsed url is valid and is assigned to a new index in the url Database Object.
+    console.log(`url: ${url}, shortUrl: ${shortUrl}`)
+    res.json({ original_url : url, short_url : shortUrl} )
 
   })
 
