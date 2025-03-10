@@ -18,7 +18,7 @@ app.use(express.urlencoded( { extended: true })) //MiddleWare for form data
 // connect to MongoDatabase
 mongoose.connect('mongodb+srv://decimanao:lDhFfSRDnTl2SQYz@cluster0.l133z.mongodb.net/fcc-UrlShortenerProject.URLDatabase?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
 
-let UrlSchema = new mongoose.schema({    //create a new schema and model for Url's in order to be saved in MongoDb 
+let UrlSchema = new mongoose.Schema({    //create a new schema and model for Url's in order to be saved in MongoDb 
   url: {type: String, required: true}
 })
 let URLDatabase = mongoose.model("URLDatabase", UrlSchema)
