@@ -29,7 +29,7 @@ let urlDatabase = {}
 
 app.post("/api/shorturl", (req,res) => {
 
-  let  url  = new URL(req.body.url);
+  let { url } = req.body;
   
   let domain = url.replace(/^https?:\/\//,"").split("/")[0] // Replace the protocol part of the url with "". 
                                                            // Split it at / and store it in an array. assign [0] to domain.
@@ -38,7 +38,7 @@ app.post("/api/shorturl", (req,res) => {
   
   dns.lookup(domain, (err, address) => {
     if(err || !address){
-      return res.json( { error: 'invalid url' } )
+      return res.json( { "error": 'invalid url' } )
     }
 
     for(let key in urlDatabase){
