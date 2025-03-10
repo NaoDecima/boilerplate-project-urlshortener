@@ -28,19 +28,12 @@ app.get('/api/hello', function(req, res) {
 let urlDatabase = {}
 
 app.post("/api/shorturl", (req,res) => {
-
   let { url } = req.body;
+  let domain = new URL(url).hostname; //extracts domain
 
-  
-  
-  //let domain = url.replace(/^https?:\/\//,"").split("/")[0] // Replace the protocol part of the url with "". 
-                                                           // Split it at / and store it in an array. assign [0] to domain.
-  
-  
-  
-  dns.lookup(url, (err, address) => {
+  dns.lookup(domain, (err, address) => {
     if(err || !address){
-      return res.json( { "error": 'invalid url' } )
+      return res.json( {"error":'invalid URL'} )
     }
 
     for(let key in urlDatabase){
@@ -59,8 +52,8 @@ app.post("/api/shorturl", (req,res) => {
 })
 
 app.get("/api/shorturl/:short_url", (req,res) => {
-  let shortUrl = req.params.short_url   //when a GET request is made the value of Short_url is used
-  let originalUrl = urlDatabase[shortUrl]; // as an index in urlDatabase to find the associated originalUrl.
+  let shortUrl = req.params.short_url   //when a GET request is made the value of Short_url is used...
+  let originalUrl = urlDatabase[shortUrl]; // ...as an index in urlDatabase to find the associated originalUrl.
   console.log(`originalUrl: `+ originalUrl)
   if(originalUrl){
     return res.redirect(originalUrl) //if the originalUrl is in urlDatabase the user is redirected to it.
