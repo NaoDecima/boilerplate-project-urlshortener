@@ -27,14 +27,21 @@ app.get('/api/hello', function(req, res) {
 // URl Shortener
 let urlDatabase = {}
 
+function isValidUrl(url){
+  try{
+    let parsedUrl = new URL(url);
+    return /^(http|https):\/\/www\./.test(parsedUrl.href);
+  }catch(error){
+    return false;
+  }
+}
+
 app.post("/api/shorturl", (req,res) => {
   let { url } = req.body;
-  let domain = new URL(url).hostname; //extracts domain
 
-  dns.lookup(domain, (err, address) => {
-    if(err || !address){
-      return res.json( {"error":'invalid URL'} )
-    }
+  if(!isValidUrl(url)){
+    return res.json( {"error":'Invalid URL'} )
+  }else{
 
     for(let key in urlDatabase){
       if(urlDatabase[key] === url){
@@ -46,7 +53,15 @@ app.post("/api/shorturl", (req,res) => {
     console.log(`url: ${url}, shortUrl: ${shortUrl}`)
     res.json({ original_url : url, short_url : shortUrl} )
 
-  })
+  }
+
+  //let domain = new URL(url).hostname; //extracts domain
+
+  /*dns.lookup(domain, (err, address) => {
+    if(err || !address){
+      return res.json( {"error":'invalid URL'} )
+    }
+  })*/
 
   
 })
