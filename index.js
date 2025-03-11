@@ -16,13 +16,7 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.use(express.urlencoded( { extended: true })) //MiddleWare for form data
 
 // connect to MongoDatabase
-mongoose.connect('mongodb+srv://decimanao:lDhFfSRDnTl2SQYz@cluster0.l133z.mongodb.net/fcc-UrlShortenerProject?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
-
-let UrlSchema = new mongoose.Schema({    //create a new schema and model for Url's in order to be saved in MongoDb 
-  url: {type: String, required: true}
-})
-let URLDatabase = mongoose.model("URLDatabase", UrlSchema)
-
+mongoose.connect('mongodb+srv://decimanao:lDhFfSRDnTl2SQYz@cluster0.l133z.mongodb.net/fcc-UrlShortenerProject.URLDatabase?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 app.get('/', function(req, res) {
@@ -37,6 +31,10 @@ app.get('/api/hello', function(req, res) {
 
 // URl Shortener
 
+//create a new schema and model for Url's in order to be saved in MongoDb
+let schema = new mongoose.schema({url: {type: String, required: true}})
+let Url = mongoose.model("Url", schema)
+
 
 function isValidUrl(url){
   try{
@@ -46,59 +44,28 @@ function isValidUrl(url){
     return false;
   }
 }
-// MONGO Database CRUD functions
-async function CreateAndSaveUrl(url,done){
-  
-  let urlInstance = new URLDatabase({original_url: url })
 
-  urlInstance = await urlInstance.save(function errorCallback(err,data){
-    if(err){
-      console.error(err)
-      return done(err,null)
-      }
-    done(null, data)
-  })
-}
-
-async function findUrlInDatabase(url) {
-  try {
-    // Retrieve all documents from the collection
-    const foundUrl = await URLDatabase.findOne({ original_url: url });
-    if (foundUrl) {
-      console.log("Found matching entry:", foundUrl);
-      return foundUrl; // Return the found URL document
-    }
-    console.log("No matching entry found.");
-    return null;
-  } catch (err) {
-    console.error("Error fetching URLs:", err);
-    return null; // Return null on error
-  }
-}
-    
-
-
-
-
-// server side functions 
-app.post("/api/shorturl", async (req,res) => {
+app.post("/api/shorturl", (req,res) => {
   let { url } = req.body;
 
   if(!isValidUrl(url)){
-    return res.json( { "error": 'Invalid URL' } )
-  }else {
-    const existingUrl = await findUrlInDatabase(url); // Use await here
-    if (existingUrl) {
-      return res.json({ original_url: existingUrl.original_url, short_url: existingUrl._id }); // Return existing URL data
-    } else {
-      CreateAndSaveUrl(url, (err, savedUrl) => {
-        if (err) return res.json({ error: 'Could not save URL' });
-        return res.json({ original_url: savedUrl.original_url, short_url: savedUrl._id }); // Return saved URL data
-      });
+    return res.json( {"error":'Invalid URL'} )
+  }else{
+    for(let key in urlDatabase){
+      if(urlDatabase[key] === url){
+        return res.json({ original_url : url, short_url : key} )
+      }
     }
   }
+  const urlInstance = new Url({url: url})
+  urlInstance.save()
+    .then( data => ({original_url: data.url, short_url: data.id}))
+    .catch(err => console.error(err))
 
-  
+  /*let shortUrl = Object.keys(urlDatabase).length + 1 // return  an array with the amount of keys in the urlDatabase object and + 1  
+  urlDatabase[shortUrl] = url // at this point the parsed url is valid and is assigned to a new index in the url Database Object.
+  console.log(`url: ${url}, shortUrl: ${shortUrl}`)*/
+  res.json({ original_url : data.url, short_url : data.id} )
 })
 
 app.get("/api/shorturl/:short_url", (req,res) => {
