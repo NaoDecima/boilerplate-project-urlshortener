@@ -63,7 +63,7 @@ app.get("/api/shorturl/:short_url?", (req, res) => {
   let id = req.body.id;
   urlInstance.findById(`${id}`)
     .then(data => !data ?
-                   res.json({"No URL found"}) 
+                   res.json({error: "No URL found"}) 
                   :res.redirect(data.url) )
     .catch(err => console.error(err))
 })
