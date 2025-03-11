@@ -47,11 +47,11 @@ function isValidUrl(url){
   }
 }
 // MONGO Database CRUD functions
-function CreateAndSaveUrl(url,done){
+async function CreateAndSaveUrl(url,done){
   
   let urlInstance = new URLDatabase({original_url: url })
 
-  urlInstance.save(function errorCallback(err,data){
+  urlInstance = await urlInstance.save(function errorCallback(err,data){
     if(err){
       console.error(err)
       return done(err,null)
