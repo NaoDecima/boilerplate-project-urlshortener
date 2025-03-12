@@ -38,7 +38,7 @@ let Url = mongoose.model("Url", schema)
 
 //Handle post request
 
-get.post("/api/shorturl", (req, res) =>{
+app.post("/api/shorturl", (req, res) =>{
   let urlBody = req.body.url;
 
   const isValidUrl = (urlBody) => {
