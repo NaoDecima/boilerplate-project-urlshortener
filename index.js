@@ -34,9 +34,9 @@ app.get('/api/hello', function(req, res) {
 //create a new schema and model for Url's in order to be saved in MongoDb
 let schema = new mongoose.Schema(
   {original_url: {type: String, required: true},
-   short_url:{ type: Number, unique: true }})
+   short_url: Number})
 
-schema.index({ short_url: 1 });                                 
+schema.index({ short_url: 1 }, {unique: true});                                 
 let Url = mongoose.model("Url", schema)
 
 
