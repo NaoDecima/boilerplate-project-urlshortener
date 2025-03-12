@@ -39,7 +39,7 @@ let schema = new mongoose.Schema(
 schema.index({ short_url: 1 }, {unique: true});                                 
 let Url = mongoose.model("Url", schema)
 
-const isValidUrl = (inputUrl, callback) => {
+const isValidUrl = async (inputUrl, callback) => {
   try {
     let parsedUrl = new URL(inputUrl);
     let hostname = parsedUrl.hostname;
@@ -63,7 +63,7 @@ app.post("/api/shorturl", async (req, res) =>{
   let urlBody = req.body.url;
 
   
-  if(isValidUrl(urlBody)){
+  if(!isValidUrl(urlBody)){
     return res.json({ error: 'invalid url' })
   }else{
 
