@@ -39,43 +39,30 @@ let schema = new mongoose.Schema(
 schema.index({ short_url: 1 }, {unique: true});                                 
 let Url = mongoose.model("Url", schema)
 
-const isValidUrl = async (inputUrl, callback) => {
-  try {
-    let parsedUrl = new URL(inputUrl);
-    let hostname = parsedUrl.hostname;
-
-    dns.lookup(hostname, (err) => {
-      if (err) {
-        return callback(false);
-      }
-      return callback(true);
-    });
-
-  } catch (error) {
-    return callback(false);
-  }
-};
-
 
 //Handle post request
 
-app.post("/api/shorturl", async (req, res) =>{
+app.post("/api/shorturl", (req, res) =>{
   let urlBody = req.body.url;
 
-  
+  const isValidUrl = (urlBody) => {
+    try{
+      let parsedUrl = new URL(urlBody);
+      return /^(http|https):\/\//.test(parsedUrl.href);
+    }catch(error){
+      return false;
+    }
+  } 
   if(!isValidUrl(urlBody)){
     return res.json({ error: 'invalid url' })
   }else{
-
-    let existingUrl = await Url.findOne({ original_url: urlBody });
-    if (existingUrl) {
-    return res.json({ original_url: existingUrl.original_url, short_url: existingUrl.short_url });
-    }
 
     Url.findOne()
       .sort("-short_url")
       .then(lastUrl => {
       let newShortUrl = lastUrl ? lastUrl.short_url + 1 : 1; // Start from 1
+
+          /////chequear que
 
 
 
@@ -88,7 +75,7 @@ app.post("/api/shorturl", async (req, res) =>{
 })
 
 app.get("/api/shorturl/:short_url?", (req, res) => {
-  let shortUrl = Number(req.params.short_url);
+  let shortUrl = parseInt(req.params.short_url);
   Url.findOne({ short_url: shortUrl })
     .then(data =>  data ?
                    res.redirect(data.original_url) 
