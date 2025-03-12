@@ -54,7 +54,7 @@ app.post("/api/shorturl", (req, res) =>{
     }
   } 
   if(!isValidUrl(urlBody)){
-    res.json({ error: "Invalid URL" })
+    res.json({ error: 'invalid url' })
   }else{
 
     Url.findOne().sort("-short_url").then(lastUrl => {
