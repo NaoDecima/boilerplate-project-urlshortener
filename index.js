@@ -48,12 +48,12 @@ app.post("/api/shorturl", (req, res) =>{
   const isValidUrl = (urlBody) => {
     try{
       let parsedUrl = new URL(urlBody);
-      return /^(http|https):\/\/www\./.test(parsedUrl.href);
+      return /^(http|https):\/\//.test(parsedUrl.href);
     }catch(error){
       return false;
     }
   } 
-  if(!isValidUrl){
+  if(!isValidUrl(urlBody)){
     res.json({ error: "Invalid URL" })
   }else{
 
@@ -69,11 +69,11 @@ app.post("/api/shorturl", (req, res) =>{
 })
 
 app.get("/api/shorturl/:short_url?", (req, res) => {
-  let shortUrl = req.body.shortUrl;
-  urlInstance.findById(`${shortUrl}`)
+  let shortUrl = req.params.short_Url;
+  urlInstance.findOne({ short_url: shortUrl })
     .then(data => !data ?
                    res.json({error: "No short URL found"})
-                  :res.redirect(data.url) )
+                  :res.redirect(data.original_url) )
     .catch(err => console.error(err))
 })
 
