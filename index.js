@@ -69,7 +69,7 @@ app.post("/api/shorturl", (req, res) =>{
 })
 
 app.get("/api/shorturl/:short_url?", (req, res) => {
-  let shortUrl = req.params.short_Url;
+  let shortUrl = parseInt(req.params.short_url);
   Url.findOne({ short_url: shortUrl })
     .then(data =>  data ?
                    res.redirect(data.original_url) 
