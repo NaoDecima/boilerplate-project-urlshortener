@@ -32,7 +32,11 @@ app.get('/api/hello', function(req, res) {
 // URl Shortener
 
 //create a new schema and model for Url's in order to be saved in MongoDb
-let schema = new mongoose.Schema({original_url: {type: String, required: true}})
+let schema = new mongoose.Schema(
+  {original_url: {type: String, required: true},
+   short_url:{ type: Number, unique: true }})
+
+schema.index({ short_url: 1 });                                 
 let Url = mongoose.model("Url", schema)
 
 
@@ -52,18 +56,23 @@ app.post("/api/shorturl", (req, res) =>{
   if(!isValidUrl){
     res.json({ error: "Invalid URL" })
   }else{
-    const urlInstance = new Url({original_url: urlBody})
+
+    Url.findOne().sort("-short_url").then(lastUrl => {
+      let newShortUrl = lastUrl ? lastUrl.short_url + 1 : 1; // Start from 1
+
+    const urlInstance = new Url({original_url: urlBody, short_url: newShortUrl})
     urlInstance.save()
-      .then(data => res.json({original_url: data, short_url: data.id}))
+      .then(data => res.json({original_url: data.original_url, short_url: data.short_url}))
       .catch(err => console.error(err))
+    })
   }
 })
 
 app.get("/api/shorturl/:short_url?", (req, res) => {
-  let id = req.body.id;
-  urlInstance.findById(`${id}`)
+  let shortUrl = req.body.shortUrl;
+  urlInstance.findById(`${shortUrl}`)
     .then(data => !data ?
-                   res.json({error: "No URL found"}) 
+                   res.json({error: "No short URL found"})
                   :res.redirect(data.url) )
     .catch(err => console.error(err))
 })
