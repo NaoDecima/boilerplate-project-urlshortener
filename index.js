@@ -63,7 +63,7 @@ app.post("/api/shorturl", async (req, res) =>{
   let urlBody = req.body.url;
 
   
-  if(!isValidUrl(urlBody)){
+  if(!isValidUrl(urlBody, callback)){
     return res.json({ error: 'invalid url' })
   }else{
 
